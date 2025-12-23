@@ -14,7 +14,9 @@ class QnoxFlutterwave
 {
     private const TOKEN_CACHE_KEY = 'qnox_flutterwave_access_token';
     private const DEFAULT_EXPIRES_IN = 600;
-    private const DEFAULT_BASE_URL = 'https://developersandbox-api.flutterwave.com';
+    public const DEFAULT_SANDBOX_BASE_URL = 'https://developersandbox-api.flutterwave.com';
+    public const DEFAULT_LIVE_BASE_URL = 'https://api.flutterwave.com';
+    public const DEFAULT_BASE_URL = self::DEFAULT_SANDBOX_BASE_URL;
     private const DEFAULT_TOKEN_URL = 'https://idp.flutterwave.com/realms/flutterwave/protocol/openid-connect/token';
 
     public function __construct(

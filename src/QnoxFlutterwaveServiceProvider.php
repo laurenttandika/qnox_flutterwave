@@ -13,7 +13,13 @@ class QnoxFlutterwaveServiceProvider extends ServiceProvider
 
         $this->app->singleton(QnoxFlutterwave::class, function ($app) {
             $config = $app['config']->get('qnox_flutterwave', []);
-            $baseUrl = rtrim($config['base_url'] ?? 'https://developersandbox-api.flutterwave.com', '/');
+            $mode = strtolower($config['mode'] ?? 'sandbox');
+
+            $baseUrl = $mode === 'live'
+                ? QnoxFlutterwave::DEFAULT_LIVE_BASE_URL
+                : QnoxFlutterwave::DEFAULT_SANDBOX_BASE_URL;
+
+            $baseUrl = rtrim($baseUrl, '/');
 
             $http = new Client([
                 'base_uri' => $baseUrl . '/',
@@ -26,7 +32,6 @@ class QnoxFlutterwaveServiceProvider extends ServiceProvider
             return new QnoxFlutterwave(
                 httpClient: $http,
                 baseUrl: $baseUrl,
-                tokenUrl: $config['token_url'] ?? 'https://idp.flutterwave.com/realms/flutterwave/protocol/openid-connect/token',
                 clientId: $config['client_id'] ?? '',
                 clientSecret: $config['client_secret'] ?? '',
                 encryptionKey: $config['encryption_key'] ?? '',

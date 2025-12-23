@@ -24,8 +24,7 @@ FLW_CLIENT_ID=your-client-id #from flutterwave
 FLW_CLIENT_SECRET=your-client-secret #from flutterwave
 FLW_ENCRYPTION_KEY=your-base64-aes-key   # used for card field encryption from flutterwave
 FLW_SECRET_HASH=your-webhook-secret-hash # for signature checks
-FLW_BASE_URL=https://developersandbox-api.flutterwave.com   # optional override
-FLW_TOKEN_URL=https://idp.flutterwave.com/realms/flutterwave/protocol/openid-connect/token
+FLW_MODE=sandbox  # or live; URLs are handled internally
 ```
 
 ## Usage
