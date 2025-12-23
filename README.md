@@ -1,11 +1,11 @@
 # Qnox Flutterwave (V4) PHP SDK
 
-Packagist library that will wrap the Flutterwave v4 APIs for PHP and Laravel projects. The codebase is in early scaffolding; the public API may change until a stable release lands.
+Packagist-friendly SDK that wraps the Flutterwave v4 APIs for PHP and Laravel projects. Class/file names are prefixed with `Qnox` to avoid collisions with other packages.
 
 ## Requirements
 - PHP 8.1+
 - Laravel 10 or 11 (optional; for auto-discovery)
-- `guzzlehttp/guzzle` ^7 (installed via composer)
+- `guzzlehttp/guzzle` ^7
 
 ## Installation
 ```bash
@@ -13,41 +13,73 @@ composer require qnox/qnox_flutterwave
 ```
 
 ## Laravel integration
-- The service provider is auto-discovered: `Qnox\QnoxFlutterwave\FlutterwaveServiceProvider`.
-- A facade alias is registered for convenience: `Flutterwave` → `Qnox\QnoxFlutterwave\Facades\Flutterwave`.
+- Auto-discovered provider: `Qnox\QnoxFlutterwave\QnoxFlutterwaveServiceProvider`.
+- Facade alias: `QnoxFlutterwave` → `Qnox\QnoxFlutterwave\Facades\QnoxFlutterwave`.
+- Publish config (optional): `php artisan vendor:publish --tag=qnox-flutterwave-config`.
 
 ## Configuration
-Add your Flutterwave credentials to your environment (keys from the Flutterwave dashboard):
+Environment keys (defaults target the Flutterwave sandbox):
 ```
-FLW_PUBLIC_KEY=your-public-key
-FLW_SECRET_KEY=your-secret-key
-FLW_ENCRYPTION_KEY=your-encryption-key
-FLW_ENV=staging   # or production
+FLW_CLIENT_ID=your-client-id
+FLW_CLIENT_SECRET=your-client-secret
+FLW_ENCRYPTION_KEY=your-base64-aes-key   # used for card field encryption
+FLW_SECRET_HASH=your-webhook-secret-hash # for signature checks
+FLW_BASE_URL=https://developersandbox-api.flutterwave.com   # optional override
+FLW_TOKEN_URL=https://idp.flutterwave.com/realms/flutterwave/protocol/openid-connect/token
 ```
-Configuration wiring is still evolving; final config names and defaults will be documented alongside the first tagged release.
 
-## Usage (preview)
-Example of the intended facade-based experience; method names are subject to change while endpoints are implemented:
+## Usage
 ```php
-use Qnox\QnoxFlutterwave\Facades\Flutterwave;
+use Qnox\QnoxFlutterwave\Facades\QnoxFlutterwave;
 
-$payment = Flutterwave::payments()->initialize([
-    'amount' => 100,
-    'currency' => 'NGN',
-    'tx_ref' => 'txn-123',
-    'customer' => ['email' => 'customer@example.com'],
+// Get OAuth token (auto-cached)
+$token = QnoxFlutterwave::getAccessToken();
+$accessToken = $token['access_token'];
+
+// Create or search a customer
+$customer = QnoxFlutterwave::createCustomer($accessToken, 'user@example.com');
+
+// Create a mobile-money payment method
+$method = QnoxFlutterwave::createMobilePaymentMethod($accessToken, [
+    'mobile_money' => ['network' => 'AIRTEL', 'country_code' => 255, 'phone_number' => '713380217'],
+    'type' => 'mobile_money',
+    'customer_id' => $customer['data']['id'],
+]);
+
+// Charge the customer
+$charge = QnoxFlutterwave::createCharge($accessToken, [
+    'currency' => 'TZS',
+    'recurring' => false,
+    'amount' => 2000,
+    'reference' => 'ref-' . time(),
+    'customer_id' => $customer['data']['id'],
+    'payment_method_id' => $method['data']['id'],
     'redirect_url' => 'https://example.com/redirect',
 ]);
 ```
-Non-Laravel projects will be able to instantiate a client class directly once the core SDK is published.
+
+### Card encryption helper
+```php
+$nonce = QnoxFlutterwave::generateNonce(); // e.g. 12 chars
+$encryptedNumber = QnoxFlutterwave::encryptGCMField($cardNumber, $nonce, env('FLW_ENCRYPTION_KEY'));
+```
+
+### Webhook verification
+```php
+$isValid = QnoxFlutterwave::verifyWebhookSignature(
+    request()->header('flutterwave-signature'),
+    request()->getContent()
+);
+abort_unless($isValid, 401);
+```
 
 ## Roadmap
-- Coverage of core v4 endpoints: payments, transfers, virtual accounts, settlements.
-- Request/response helpers with typed DTOs.
-- Laravel-friendly configuration and middleware hooks for webhook verification.
+- Add higher-level DTOs and validation around request payloads.
+- Expand coverage beyond customers/payment methods/charges (transfers, settlements, virtual accounts).
+- More Laravel niceties: middleware for webhook verification and test fakes.
 
 ## Contributing
-Issues and pull requests are welcome. Please describe the endpoint or feature you are targeting and any context from the Flutterwave docs to speed up review.
+Issues and PRs are welcome. Please describe the endpoint/flow you’re targeting and link the relevant Flutterwave docs.
 
 ## License
 MIT

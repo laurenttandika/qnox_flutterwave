@@ -16,10 +16,10 @@
     "extra": {
         "laravel": {
             "providers": [
-                "Qnox\\QnoxFlutterwave\\FlutterwaveServiceProvider"
+                "Qnox\\QnoxFlutterwave\\QnoxFlutterwaveServiceProvider"
             ],
             "aliases": {
-                "Flutterwave": "Qnox\\QnoxFlutterwave\\Facades\\Flutterwave"
+                "QnoxFlutterwave": "Qnox\\QnoxFlutterwave\\Facades\\QnoxFlutterwave"
             }
         }
     },
