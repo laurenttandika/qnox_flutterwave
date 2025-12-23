@@ -9,7 +9,7 @@ Packagist-friendly SDK that wraps the Flutterwave v4 APIs for PHP and Laravel pr
 
 ## Installation
 ```bash
-composer require qnox/qnox_flutterwave
+composer require qnox/qnox_flutterwave:^1.0.0
 ```
 
 ## Laravel integration
