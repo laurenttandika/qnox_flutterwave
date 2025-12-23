@@ -307,7 +307,7 @@ class QnoxFlutterwave
         return is_array($decoded) ? $decoded : [];
     }
 
-    private function headers(string $accessToken = null, array $extra = []): array
+    private function headers(?string $accessToken = null, array $extra = []): array
     {
         $headers = [
             'accept' => 'application/json',
