@@ -1,0 +1,34 @@
+{
+    "name": "qnox/qnox_flutterwave",
+    "description": "Flutterwave V4 Api Integration",
+    "type": "library",
+    "require": {
+        "php": "^8.1",
+        "illuminate/support": "^10.0|^11.0",
+        "guzzlehttp/guzzle": "^7.0"
+    },
+    "license": "MIT",
+    "autoload": {
+        "psr-4": {
+            "Qnox\\QnoxFlutterwave\\": "src/"
+        }
+    },
+    "extra": {
+        "laravel": {
+            "providers": [
+                "Qnox\\QnoxFlutterwave\\FlutterwaveServiceProvider"
+            ],
+            "aliases": {
+                "Flutterwave": "Qnox\\QnoxFlutterwave\\Facades\\Flutterwave"
+            }
+        }
+    },
+    "authors": [
+        {
+            "name": "Laurent Tandika",
+            "email": "mr.laurenttandika@gmail.com"
+        }
+    ],
+    "minimum-stability": "stable",
+    "prefer-stable": true
+}
