@@ -3,9 +3,9 @@
 Packagist-friendly SDK that wraps the Flutterwave v4 APIs for PHP and Laravel projects. Class/file names are prefixed with `Qnox` to avoid collisions with other packages.
 
 ## Requirements
-- PHP 8.1+
-- Laravel 10 or 11 (optional; for auto-discovery)
-- `guzzlehttp/guzzle` ^7
+- PHP 8.2+
+- Laravel 8–12 (optional; for auto-discovery)
+- `guzzlehttp/guzzle` ^7.7
 
 ## Installation
 ```bash
