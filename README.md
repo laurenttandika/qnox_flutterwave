@@ -55,6 +55,13 @@ $charge = QnoxFlutterwave::createCharge($accessToken, [
     'payment_method_id' => $method['data']['id'],
     'redirect_url' => 'https://example.com/redirect',
 ]);
+
+// Continue a charge when Flutterwave asks for more input (e.g., OTP)
+$updatedCharge = QnoxFlutterwave::updateCharge($accessToken, $charge['data']['id'], [
+    // Provide the fields indicated in the charge's next_action response
+    'otp' => '123456',
+    // 'action' => 'resend_otp', // other keys vary by flow; see Flutterwave docs
+]);
 ```
 
 ### Card encryption helper
