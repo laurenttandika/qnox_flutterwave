@@ -27,8 +27,7 @@ class QnoxFlutterwave
         private string $clientSecret = '',
         private string $encryptionKey = '',
         private string $secretHash = ''
-    ) {
-    }
+    ) {}
 
     public function getAccessToken(): array
     {
@@ -208,7 +207,7 @@ class QnoxFlutterwave
 
         $headers = $this->headers($accessToken);
         if (isset($payload['reference'])) {
-            $headers['X-Idempotency-Key'] = $payload['reference'].$payload['reference'];
+            $headers['X-Idempotency-Key'] = $payload['reference'] . $payload['reference'];
         }
         if (isset($payload['scenario_key'])) {
             $headers['X-Scenario-Key'] = $payload['scenario_key'];
@@ -217,6 +216,16 @@ class QnoxFlutterwave
 
         return $this->request('POST', 'charges', [
             'headers' => $headers,
+            'json' => $payload,
+        ]);
+    }
+
+    public function updateCharge(string $accessToken, string $chargeId, array $attributes): array
+    {
+        $payload = array_filter($attributes, static fn($value) => !is_null($value));
+
+        return $this->request('PUT', 'charges/' . $chargeId, [
+            'headers' => $this->headers($accessToken),
             'json' => $payload,
         ]);
     }
