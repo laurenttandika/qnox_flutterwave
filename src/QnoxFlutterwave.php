@@ -208,7 +208,7 @@ class QnoxFlutterwave
 
         $headers = $this->headers($accessToken);
         if (isset($payload['reference'])) {
-            $headers['X-Idempotency-Key'] = $payload['reference'];
+            $headers['X-Idempotency-Key'] = $payload['reference'].$payload['reference'];
         }
         if (isset($payload['scenario_key'])) {
             $headers['X-Scenario-Key'] = $payload['scenario_key'];
